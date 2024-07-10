@@ -2,13 +2,8 @@
 ## A rest api to get the competitors in a competition **that has not happened yet** using web scraping
 **Live on https://competitors-in-competition.vercel.app**
 # Usage
-Go to competitors-in-competition.vercel/competitors and add a competitionId parameter to the body that contains the competitionId  
-
-e.g. https://competitors-in-competition.vercel.app/competitors
-body:
-{
-    "competitionId": "SpeedcubeBajaOpen2024"
-}
+Go to competitors-in-competition.vercel/{the competition Id you want to get the competitors from}  
+e.g. https://competitors-in-competition.vercel.app/Euro2024
 
 You can find the competition id by going to the WCA page for the competition and looking at the end of the url
 
