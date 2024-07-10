@@ -5,7 +5,6 @@
 Go to competitors-in-competition.vercel/competitors and add a competitionId parameter to the body that contains the competitionId  
 
 e.g. https://competitors-in-competition.vercel.app/competitors
-
 body:
 {
     "competitionId": "SpeedcubeBajaOpen2024"
@@ -14,7 +13,7 @@ body:
 You can find the competition id by going to the WCA page for the competition and looking at the end of the url
 
 
-https://www.worldcubeassociation.org/competitions/Euro2024 -> Here Euro2024 is the competition Id for the european championships 2024
+https://www.worldcubeassociation.org/competitions/**Euro2024** -> Here Euro2024 is the competition Id for the european championships 2024
 
 
 # Local Setup
