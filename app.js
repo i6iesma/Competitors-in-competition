@@ -1,44 +1,48 @@
-const express = require('express');
-const axios = require('axios');
-const cheerio = require('cheerio');
+const express = require("express");
+const cheerio = require("cheerio");
 
 const app = express();
 const port = 3001;
-const axiosInstance = axios.create({
-    baseURL: 'https://www.worldcubeassociation.org',
-});
 
-app.get('/competitions/:competitionId', async (req, res) => {
-    console.time("scrape");
-    const competitionId = req.params.competitionId;
-    try {
-        // Fetch the HTML from the URL
-        const response = await axiosInstance.get(`/competitions/${competitionId}/registrations`);
-        const html = response.data;
-        // Load the HTML into Cheerio
-        const $ = cheerio.load(html);
+app.get("/competitions/:competitionId", async (req, res) => {
+  const competitionId = req.params.competitionId;
+  // Fetch the HTML from the URL
 
-        // Extract the data you need
-        let idArr = []
-        $('table tbody tr').each((index, element) => {
-            const href = $(element).find('td').children("a").attr("href");
-            if (href != undefined) {
-                const id = href.split("/").pop();
-                idArr.push(id);
-            }
-
-
-        });
-
-        // Send the extracted data as JSON
-        res.json(idArr);
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('An error occurred while fetching the data');
-    }
-    console.timeEnd("scrape")
+  extractPersonLinks(
+    `https://worldcubeassociation.org/competitions/${competitionId}/registrations`
+  )
+    .then((links) =>
+      res.status(200).json(links.map((link) => link.split("/").pop()))
+    )
+    .catch((err) => res.status(500).json({ error: err.message }));
+  // Load the HTML into cheerio
+  // Extract the data you need
+  // Send the extracted data as JSON
 });
 
 app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+  console.log(`Server is running on http://localhost:${port}`);
 });
+
+const puppeteer = require("puppeteer");
+
+async function extractPersonLinks(url) {
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+  await page.goto(url, { waitUntil: "networkidle0" }); // Wait for rendering
+
+  // Example: Extract links using page.evaluate (runs in the browser context)
+  const links = await page.evaluate(() => {
+    const personLinks = [];
+    const aTags = document.querySelectorAll("a");
+    aTags.forEach((a) => {
+      if (a.href.includes("/persons/")) {
+        personLinks.push(a.href);
+      }
+    });
+    return personLinks;
+  });
+
+  await browser.close();
+  return links;
+}
